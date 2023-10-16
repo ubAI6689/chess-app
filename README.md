@@ -44,3 +44,35 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+## Common Error
+
+```
+> chess-app@0.1.0 start
+> react-scripts start
+
+Attempting to bind to HOST environment variable: x86_64-conda-linux-gnu
+If this was unintentional, check that you haven't mistakenly set it in your shell.
+Learn more here: https://cra.link/advanced-config
+
+(node:11793) [DEP_WEBPACK_DEV_SERVER_ON_AFTER_SETUP_MIDDLEWARE] DeprecationWarning: 'onAfterSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:11793) [DEP_WEBPACK_DEV_SERVER_ON_BEFORE_SETUP_MIDDLEWARE] DeprecationWarning: 'onBeforeSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+/home/abu/React_App/chess-app/node_modules/webpack-dev-server/lib/Server.js:2557
+        throw error;
+        ^
+
+Error: getaddrinfo ENOTFOUND x86_64-conda-linux-gnu
+    at GetAddrInfoReqWrap.onlookup [as oncomplete] (node:dns:108:26) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'x86_64-conda-linux-gnu'
+}
+
+Node.js v18.17.1
+```
+
+## Solution
+
+Type `unset HOST` before `npm run start`
