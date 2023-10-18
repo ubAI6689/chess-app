@@ -6,7 +6,7 @@ import Referee from "../../referee/Referee";
 const verticalAxis = ["1", "2", "3", "4", "5", "6", "7", "8"];
 const horizontalAxis = ["a", "b", "c", "d", "e", "f", "g", "h"];
 
-interface Piece {
+export interface Piece {
   image: string;
   x: number;
   y: number;
@@ -117,27 +117,37 @@ export default function Chessboard() {
       const y = Math.abs(Math.ceil((e.clientY - chessboard.offsetTop - 800) / 100));
       console.log(x,y);
 
+      const currentPiece = pieces.find(p => p.x === gridX && p.y === gridY);
+      const attackedPiece = pieces.find(p => p.x === x && p.y === y);
       
-      // update the piece position
-      setPieces((value) => {
-        const pieces = value.map((p) => {
-          if (p.x === gridX && p.y === gridY){
-            const validMove = referee.isValidMove(gridX, gridY, x, y, p.type, p.team);
-            
-            if (validMove) {
-              p.x = x;
-              p.y = y;
-            } else {
-              activePiece.style.position = 'relative';
-              activePiece.style.removeProperty('top');
-              activePiece.style.removeProperty('left');
+      if (currentPiece) {
+        const validMove = referee.isValidMove(gridX, gridY, x, y, currentPiece.type, currentPiece.team, pieces);
+        
+        // REDUCE FUNCTION
+        // RESULTS => Array of results
+        // PIECE => the current piece we are handling
+        if (validMove) {
+          // update the piece position
+          // if the piece is attacked, remove
+          const updatedPieces = pieces.reduce((results, piece) => {
+            if (piece.x === gridX && piece.y === gridY) {
+              piece.x = x;
+              piece.y = y;
+              results.push(piece);
+            } else if (!(piece.x === x && piece.y === y)) {
+              results.push(piece);
             }
-
-          }
-          return p;
-        });
-        return pieces;
-      });
+            return results;
+          }, [] as Piece[]);
+          setPieces(updatedPieces);
+          return pieces;
+        } else {
+          // Reset the piece position
+          activePiece.style.position = 'relative';
+          activePiece.style.removeProperty('left');
+          activePiece.style.removeProperty('top');
+        }
+      }
       setActivePiece(null);
     }
   } 
